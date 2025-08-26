@@ -39,4 +39,19 @@ int main(void){
     print_array(arr2, n);
     insertion_sort(arr2, n);
     print_array(arr2, n);
+
+    int arr3[50]= {
+        83, 12, 47, 91, 3, 68, 
+        29, 76, 55, 34, 7, 96, 
+        18, 41, 62, 25, 88, 10, 
+        39, 74, 1, 99, 21, 60, 45, 
+        6, 80, 14, 36, 93, 27, 52, 
+        19, 70, 31, 85, 9, 66, 23,
+        58, 43, 98, 16, 64, 37, 5, 
+        50, 86, 32, 72
+    };
+    n = sizeof(arr3) / sizeof(arr3[0]);
+    print_array(arr3, n);
+    insertion_sort(arr3, n);
+    print_array(arr3, n);
 }
