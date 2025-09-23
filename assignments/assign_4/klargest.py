@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 # coding=utf-8
 import random
 
@@ -44,10 +43,48 @@ numbers_upper = 8
 # hver gang, om verdiene over ikke endres.
 seed = 0
 
+def partition(A, p, r):
+    x = A[r]
+    i = p-1
+    for j in range(p, r):
+        if A[j] <= x:
+            i += 1
+            A[i], A[j] = A[j], A[i]
+    A[i + 1], A[r] = A[r], A[i + 1]
+    return i + 1
+
+def random_partition(A, p, r):
+    i = random.randint(p, r)
+    A[i], A[r] = A[r], A[i]
+    return partition(A, p, r)
+
+def random_select(A, p, r , i):
+    if (p == r):
+        return A[p]
+    q = random_partition(A, p, r)
+    k = q - p + 1
+    if (i == k):
+        return A[q]
+    elif (i < k):
+        return random_select(A, p, q -1, i)
+    else:
+        return random_select(A, q + 1, r, i - k)
 
 def k_largest(A, n, k):
-    # Skriv koden din her
-    pass
+    if (k == 0):
+        return []
+    
+    kLargest = random_select(A, 0, n-1, n - k + 1)
+    result = []
+    for i in A:
+        if (i > kLargest):
+            result.append(i)
+    remaining = k - len(result)
+    result += [kLargest] * remaining
+
+    return result
+
+
 
 
 # Sett med hardkodete tester pÃ¥ format: (A, k)
