@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 # coding=utf-8
 import random
 
@@ -38,8 +37,25 @@ seed = 0
 
 
 def counting_sort(A, n):
-    # Skriv koden din her
-    pass
+    if n <= 1:
+        return A
+
+    k = 2048
+    counts = [0] * k
+    sorted_list = [0] * n
+
+    for i in range(n):
+        counts[A[i]] += 1 
+
+    for i in range(1, k):
+        counts[i] += counts[i - 1]
+    
+    for i in reversed(A):
+        sorted_list[counts[i] - 1] = i
+        counts[i] -= 1
+
+    return sorted_list
+
 
 
 # Hardkodete tester
