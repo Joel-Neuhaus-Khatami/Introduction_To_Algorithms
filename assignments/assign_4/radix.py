@@ -47,36 +47,28 @@ n_diff_chars = 5
 # hver gang, om verdiene over ikke endres.
 seed = 0
 
-def char_to_int(ch):
-    if ch is None or ch == chr(0):
-        return -1
-    return ord(ch) - ord('a')
-
 def flexradix(A, n, d):
-    for i in range(n):
-        A[i] = A[i].ljust(d, chr(0))
-
     k = 27
-    for stringIndex in reversed(range(d)):
-        counts = [0] * k 
-        sortedList = ["" for _ in range(n)]
+    def mostSignificant(A, pos):
+        sortedList = []
+        if n <= 1 or pos == d:
+            return A
 
-        for name in A:
-            charInt = char_to_int(name[stringIndex]) + 1
-            counts[charInt] += 1
+        buckets = [[] for _ in range(k)]
+        for s in A:
+            if pos < len(s):
+                idx = ord(s[pos]) - ord('a') + 1
+            else:
+                idx = 0
+            buckets[idx].append(s)
 
+        sortedList.extend(buckets[0])
         for i in range(1, k):
-            counts[i] += counts[i - 1]
+            if buckets[i]:
+                sortedList.extend(mostSignificant(buckets[i], pos + 1))
+        return sortedList
 
-        for i in reversed(range(n)):
-            charInt = char_to_int(A[i][stringIndex]) + 1
-            counts[charInt] -= 1
-            sortedList[counts[charInt]] = A[i]
-
-        A = sortedList
-    for i in range(len(A)):
-        A[i] = A[i].rstrip(chr(0))
-    return A
+    return mostSignificant(A, 0)
 
 
 # Hardkodete instanser pÃ¥ format: (A, d)
