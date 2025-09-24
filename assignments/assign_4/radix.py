@@ -87,7 +87,7 @@ def flexradix(A, n, d):
         A = sortedList
         charValues = sortedCharvalues
 
-    return
+    return A
 
 # Hardkodete instanser pÃ¥ format: (A, d)
 tests = [
