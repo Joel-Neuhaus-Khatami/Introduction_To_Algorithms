@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 # coding=utf-8
 import random
 from string import ascii_lowercase
@@ -49,12 +48,44 @@ n_diff_chars = 5
 seed = 0
 
 def char_to_int(char):
+    if (char ==''):
+        return -1
     return ord(char) - 97
 
+def counting_sort(A, n, index):
+    if (n <= 1):
+        return A
+
+    k = 27
+    counts = [0] * k
+    sorted_list = [0] * n
+
+    for i in A:
+        if (index < len(i)):
+            charInt = char_to_int(i[index])
+        else:
+            charInt = char_to_int('')
+
+        counts[charInt + 1] += 1 
+
+    for i in range(1, k):
+        counts[i] += counts[i - 1]
+    
+    for i in reversed(A):
+        if (index < len(i)):
+            charInt = char_to_int(i[index])
+        else:
+            charInt = char_to_int('')
+        sorted_list[counts[charInt + 1] - 1] = i
+        counts[charInt + 1] -= 1
+
+    return sorted_list
 
 def flexradix(A, n, d):
     # Skriv koden din her
-    pass
+    for stringIndex in reversed(range(d)):
+        A = counting_sort(A, n, stringIndex)
+    return A
 
 # Hardkodete instanser pÃ¥ format: (A, d)
 tests = [

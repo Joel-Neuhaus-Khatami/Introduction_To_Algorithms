@@ -23,7 +23,7 @@ void countSort(int A[], int n, int exp) {
         count[digit]++;
     }
 
-    // Convert count[] to cumulative counts
+// Convert count[] to cumulative counts
     for (int i = 1; i < 10; i++) {
         count[i] += count[i - 1];
     }
