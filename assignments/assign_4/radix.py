@@ -52,42 +52,51 @@ def char_to_int(char):
         return -1
     return ord(char) - 97
 
+def countSortLength(A, n, d): 
+    countLen = [0] * (d+1) 
+    sortedLength = [None] * n 
+    for i in A: 
+        countLen[len(i)] += 1 
 
+    for i in range(1, d + 1): 
+        countLen[i] += countLen[i - 1] 
+
+    for i in reversed(A): 
+        length = len(i) 
+        countLen[length] -= 1 
+        sortedLength[countLen[length]] = i 
+        
+    return sortedLength
+
+def countSort(A, n, index):
+    k = 27
+    counts = [0] * k
+    sortedList = [0] * n
+
+    for i in A:
+        if index < len(i):
+            charInt = char_to_int(i[index])
+        else:
+            charInt = -1
+        counts[charInt + 1] += 1
+
+    for i in range(1, k):
+        counts[i] += counts[i - 1]
+
+    for i in reversed(A):
+        if index < len(i):
+            charInt = char_to_int(i[index])
+        else:
+            charInt = -1
+        counts[charInt + 1] -= 1
+        sortedList[counts[charInt + 1]] = i
+    return sortedList
 
 def flexradix(A, n, d):
     # Skriv koden din her
-    charValues = []
-    for i in range(n):
-        charRow = [] 
-        for j in range(d):
-            if j < len(A[i]):
-                charRow.append(char_to_int(A[i][j]))
-            else:
-                charRow.append(-1) 
-        charValues.append(charRow)  #
-
+    A = countSortLength(A, n, d)
     for stringIndex in reversed(range(d)):
-        k = 27
-        counts = [0] * k
-        sortedList = [0] * n
-        sortedCharvalues = [0] * n
-
-        for i in range(n):
-            charInt = charValues[i][stringIndex]
-            counts[charInt + 1] += 1 
-
-        for i in range(1, k):
-            counts[i] += counts[i - 1]
-        
-        for i in reversed(range(n)):
-            charInt = charValues[i][stringIndex]
-            sortedList[counts[charInt + 1] - 1] = A[i]
-            sortedCharvalues[counts[charInt + 1] - 1] = charValues[i]
-            counts[charInt + 1] -= 1
-
-        A = sortedList
-        charValues = sortedCharvalues
-
+        A = countSort(A, n, stringIndex)
     return A
 
 # Hardkodete instanser pÃ¥ format: (A, d)
