@@ -47,47 +47,64 @@ n_diff_chars = 5
 # hver gang, om verdiene over ikke endres.
 seed = 0
 
-def char_to_int(char):
-    if (char ==''):
+def char_to_int(ch):
+    if ch is None:
         return -1
-    return ord(char) - 97
+    return ord(ch) - 97
 
+def bucketSortLength(A, n, d):
+    if n == 0:
+        return []
+    buckets = [[] for _ in range(d + 1)]
+    for string in A:
+        length = len(string)
+        if length > d:
+            buckets[d].append(string)
+        else:
+            buckets[length].append(string)
+    sortedList = []
+    for bucket in buckets:
+        sortedList.extend(bucket)
+    return sortedList
 
 def flexradix(A, n, d):
-    # Skriv koden din her
-    charValues = []
-    for i in range(n):
-        charRow = [] 
-        for j in range(d):
-            if j < len(A[i]):
-                charRow.append(char_to_int(A[i][j]))
-            else:
-                charRow.append(-1) 
-        charValues.append(charRow)  #
-
-    for stringIndex in reversed(range(d)):
-        k = 27
+    if n == 0:
+        return []
+    A = bucketSortLength(A, n, d)
+    currentMax = 0
+    for string in A:
+        if len(string) > currentMax:
+            currentMax = len(string)
+    if currentMax > d:
+        currentMax = d
+    if currentMax == 0:
+        return A
+    
+    k = 27
+    for stringIndex in reversed(range(currentMax)):
         counts = [0] * k
-        sortedList = [0] * n
-        sortedCharvalues = [0] * n
-
-        for i in range(n):
-            charInt = charValues[i][stringIndex]
-            counts[charInt + 1] += 1 
-
-        for i in range(1, k):
-            counts[i] += counts[i - 1]
-        
-        for i in reversed(range(n)):
-            charInt = charValues[i][stringIndex]
-            sortedList[counts[charInt + 1] - 1] = A[i]
-            sortedCharvalues[counts[charInt + 1] - 1] = charValues[i]
-            counts[charInt + 1] -= 1
-
+        sortedList = [None] * n
+        for string in A:
+            if stringIndex < len(string):
+                charInt = char_to_int(string[stringIndex]) + 1
+            else:
+                charInt = 0
+            counts[charInt] += 1
+        total = 0
+        for i in range(k):
+            c = counts[i]
+            counts[i] = total
+            total += c
+        for string in A:
+            if stringIndex < len(string):
+                charInt = char_to_int(string[stringIndex]) + 1
+            else:
+                charInt = 0
+            sortedList[counts[charInt]] = string
+            counts[charInt] += 1
         A = sortedList
-        charValues = sortedCharvalues
-
     return A
+
 
 # Hardkodete instanser pÃ¥ format: (A, d)
 tests = [
