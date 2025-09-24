@@ -48,61 +48,34 @@ n_diff_chars = 5
 seed = 0
 
 def char_to_int(ch):
-    if ch is None:
-        return -1
-    return ord(ch) - 97
-
-def bucketSortLength(A, n, d):
-    if n == 0:
-        return []
-    buckets = [[] for _ in range(d + 1)]
-    for string in A:
-        length = len(string)
-        if length > d:
-            buckets[d].append(string)
-        else:
-            buckets[length].append(string)
-    sortedList = []
-    for bucket in buckets:
-        sortedList.extend(bucket)
-    return sortedList
+    if ch is None or ch == chr(0):
+        return -1  # Treat padding as lowest value
+    return ord(ch) - ord('a')
 
 def flexradix(A, n, d):
-    if n == 0:
-        return []
-    A = bucketSortLength(A, n, d)
-    currentMax = 0
-    for string in A:
-        if len(string) > currentMax:
-            currentMax = len(string)
-    if currentMax > d:
-        currentMax = d
-    if currentMax == 0:
-        return A
-    
+    for i in range(n):
+        A[i] = A[i].ljust(d, chr(0))
+
     k = 27
-    for stringIndex in reversed(range(currentMax)):
-        counts = [0] * k
-        sortedList = [None] * n
-        for string in A:
-            if stringIndex < len(string):
-                charInt = char_to_int(string[stringIndex]) + 1
-            else:
-                charInt = 0
+    for pos in reversed(range(d)):
+        counts = [0] * k 
+        sortedList = ["" for _ in range(n)]
+
+        for name in A:
+            charInt = char_to_int(name[pos]) + 1  # shift -1 to 0
             counts[charInt] += 1
-        total = 0
-        for i in range(k):
-            c = counts[i]
-            counts[i] = total
-            total += c
-        for string in A:
-            if stringIndex < len(string):
-                charInt = char_to_int(string[stringIndex]) + 1
-            else:
-                charInt = 0
-            sortedList[counts[charInt]] = string
-            counts[charInt] += 1
+
+        for i in range(1, k):
+            counts[i] += counts[i - 1]
+
+        for i in reversed(range(n)):
+            charInt = char_to_int(A[i][pos]) + 1
+            counts[charInt] -= 1
+            sortedList[counts[charInt]] = A[i]
+
         A = sortedList
+    for i in range(len(A)):
+        A[i] = A[i].rstrip(chr(0))
     return A
 
 
