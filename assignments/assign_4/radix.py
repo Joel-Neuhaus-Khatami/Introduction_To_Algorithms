@@ -56,32 +56,37 @@ def char_to_int(char):
 
 def flexradix(A, n, d):
     # Skriv koden din her
+    charValues = []
+    for i in range(n):
+        charRow = [] 
+        for j in range(d):
+            if j < len(A[i]):
+                charRow.append(char_to_int(A[i][j]))
+            else:
+                charRow.append(-1) 
+        charValues.append(charRow)  #
+
     for stringIndex in reversed(range(d)):
         k = 27
         counts = [0] * k
-        sorted_list = [0] * n
+        sortedList = [0] * n
+        sortedCharvalues = [0] * n
 
-        for i in A:
-            if (stringIndex < len(i)):
-                charInt = char_to_int(i[stringIndex])
-            else:
-                charInt = char_to_int('')
-
+        for i in range(n):
+            charInt = charValues[i][stringIndex]
             counts[charInt + 1] += 1 
 
         for i in range(1, k):
             counts[i] += counts[i - 1]
         
-        for i in reversed(A):
-            if (stringIndex < len(i)):
-                charInt = char_to_int(i[stringIndex])
-            else:
-                charInt = char_to_int('')
-            sorted_list[counts[charInt + 1] - 1] = i
+        for i in reversed(range(n)):
+            charInt = charValues[i][stringIndex]
+            sortedList[counts[charInt + 1] - 1] = A[i]
+            sortedCharvalues[counts[charInt + 1] - 1] = charValues[i]
             counts[charInt + 1] -= 1
 
-        A = sorted_list
-        
+        A = sortedList
+        charValues = sortedCharvalues
 
     return A
 
