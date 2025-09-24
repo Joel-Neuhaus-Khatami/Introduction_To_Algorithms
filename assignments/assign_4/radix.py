@@ -48,58 +48,66 @@ n_diff_chars = 5
 seed = 0
 
 def char_to_int(char):
-    return ord(char) - 97
+    return 0 if char is None else (ord(char) - 96)
 
-def countSortLength(A, n, d): 
-    countLen = [0] * (d+1) 
-    sortedLength = [None] * n 
-    for i in A: 
-        countLen[len(i)] += 1 
-
-    for i in range(1, d + 1): 
-        countLen[i] += countLen[i - 1] 
-
-    for i in reversed(A): 
-        length = len(i) 
-        countLen[length] -= 1 
-        sortedLength[countLen[length]] = i 
-        
-    return sortedLength
-
-def countSort(A, n, index):
-    k = 27
-    counts = [0] * k
-    sortedList = [0] * n
+def bucketSortLength(A, n, d):
+    if n == 0:
+        return []
+    buckets = []
+    for i in range(d + 1):
+        buckets.append([])
 
     for i in A:
-        if index < len(i):
-            charInt = char_to_int(i[index])
+        length = len(i)
+        if (length > d):
+            index = d
         else:
-            charInt = -1
-        counts[charInt + 1] += 1
+           index = length
+        buckets[index].append(i)
+    sortedList = []
+    for i in buckets:
+        sortedList.extend(i)
+    return sortedList
 
-    for i in range(1, k):
-        counts[i] += counts[i - 1]
+def countSort(A, n, index):
+    k = 27  
+    counts = [0] * k
+    sortedList = [None] * n
 
-    for i in reversed(A):
-        if index < len(i):
-            charInt = char_to_int(i[index])
+    for i in A:
+        if (index < len(i)):
+            counts[char_to_int(i[index])] += 1
         else:
-            charInt = -1
-        counts[charInt + 1] -= 1
-        sortedList[counts[charInt + 1]] = i
+            counts[char_to_int(None)] += 1
+
+    total = 0
+    for i in range(k):
+        c = counts[i]
+        counts[i] = total
+        total += c
+
+    for s in A:
+        if (index < len(s)):
+            b = char_to_int(s[index])
+        else:
+            b = char_to_int(None)
+        sortedList[counts[b]] = s
+        counts[b] += 1
+
     return sortedList
 
 def flexradix(A, n, d):
     if n == 0:
         return []
-    A = countSortLength(A, n, d)
+    A = bucketSortLength(A, n, d)
     currentMax = 0
     for i in A:
         if len(i) > currentMax:
             currentMax = len(i)
     currentMax = min(currentMax, d)
-
+    if currentMax == 0:
+        return A
+    
     for stringIndex in reversed(range(currentMax)):        
         A = countSort(A, n, stringIndex)
 
