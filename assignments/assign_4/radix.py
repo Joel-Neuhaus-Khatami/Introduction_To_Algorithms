@@ -49,7 +49,7 @@ seed = 0
 
 def char_to_int(ch):
     if ch is None or ch == chr(0):
-        return -1  # Treat padding as lowest value
+        return -1
     return ord(ch) - ord('a')
 
 def flexradix(A, n, d):
@@ -57,19 +57,19 @@ def flexradix(A, n, d):
         A[i] = A[i].ljust(d, chr(0))
 
     k = 27
-    for pos in reversed(range(d)):
+    for stringIndex in reversed(range(d)):
         counts = [0] * k 
         sortedList = ["" for _ in range(n)]
 
         for name in A:
-            charInt = char_to_int(name[pos]) + 1  # shift -1 to 0
+            charInt = char_to_int(name[stringIndex]) + 1
             counts[charInt] += 1
 
         for i in range(1, k):
             counts[i] += counts[i - 1]
 
         for i in reversed(range(n)):
-            charInt = char_to_int(A[i][pos]) + 1
+            charInt = char_to_int(A[i][stringIndex]) + 1
             counts[charInt] -= 1
             sortedList[counts[charInt]] = A[i]
 
