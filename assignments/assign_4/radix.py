@@ -48,8 +48,6 @@ n_diff_chars = 5
 seed = 0
 
 def char_to_int(char):
-    if (char ==''):
-        return -1
     return ord(char) - 97
 
 def countSortLength(A, n, d): 
@@ -93,10 +91,18 @@ def countSort(A, n, index):
     return sortedList
 
 def flexradix(A, n, d):
-    # Skriv koden din her
+    if n == 0:
+        return []
     A = countSortLength(A, n, d)
-    for stringIndex in reversed(range(d)):
+    currentMax = 0
+    for i in A:
+        if len(i) > currentMax:
+            currentMax = len(i)
+    currentMax = min(currentMax, d)
+
+    for stringIndex in reversed(range(currentMax)):        
         A = countSort(A, n, stringIndex)
+
     return A
 
 # Hardkodete instanser pÃ¥ format: (A, d)
