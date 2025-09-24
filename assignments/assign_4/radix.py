@@ -51,7 +51,7 @@ def flexradix(A, n, d):
     k = 27
     def mostSignificant(A, pos):
         sortedList = []
-        if n <= 1 or pos == d:
+        if len(A) <= 1 or pos == d:
             return A
 
         buckets = [[] for _ in range(k)]
